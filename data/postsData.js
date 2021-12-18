@@ -12,6 +12,7 @@ const postsData = [
       name: "Terry Wong",
       title: "Developer",
       avatar: "https://i.pravatar.cc/150?u=2",
+      isMe: true,
     },
   },
   {
@@ -26,6 +27,7 @@ const postsData = [
       name: "Alice Chan",
       title: "HR recruiter",
       avatar: "https://i.pravatar.cc/150?u=1",
+      isMe: false,
     },
   },
 ];
