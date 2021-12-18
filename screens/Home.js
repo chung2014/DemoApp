@@ -35,7 +35,7 @@ const Home = ({ navigation }) => {
           <Image
             source={{ uri: item.avatar }}
             resizeMode="contain"
-            style={{ width: 80, height: 80, borderRadius: 40 }}
+            style={{ width: 40, height: 40, borderRadius: 20 }}
           />
         </View>
         <View
