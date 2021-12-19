@@ -1,21 +1,66 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import Entypo from "react-native-vector-icons/Entypo";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { FONTS, SIZES, COLORS } from "../constants";
-import { postsData } from "../data/postsData";
+import {
+  loadArticles,
+  loadArticlesForCurrentUser,
+  likeArticle,
+  unlikeArticle,
+} from "../services/article-service";
+import moment from "moment";
 
+const LoadingView = () => {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Loading...</Text>
+    </View>
+  );
+};
 const ArticleList = ({ route }) => {
-  const [posts, setPosts] = useState(postsData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
 
-  async function loadData(user) {
-    console.log("loading data for user", user);
+  const loadData = useCallback(async () => {
+    let user;
+    if (route && route.params) {
+      user = route.params.user;
+    }
+
+    if (user) {
+      let articles;
+      if (user.is_me) {
+        articles = await loadArticlesForCurrentUser();
+      } else {
+        articles = await loadArticles(user.id);
+      }
+      setPosts(articles);
+    }
+
+    setIsLoading(false);
+  }, [route]);
+
+  async function handleLikePressed(article) {
+    if (article.is_liked) {
+      await unlikeArticle(article.id);
+    } else {
+      await likeArticle(article.id);
+    }
+
+    await loadData();
   }
 
   useEffect(() => {
-    const { user } = route.params;
-    loadData(user);
-  }, [route.params]);
+    loadData();
+  }, [loadData]);
 
   function renderItem({ item, idx }) {
     return (
@@ -35,7 +80,7 @@ const ArticleList = ({ route }) => {
           <View style={{ marginLeft: SIZES.base }}>
             <Text style={{ ...FONTS.h4 }}>{item.author.name}</Text>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text>9m</Text>
+              <Text>{moment(item.date).fromNow()}</Text>
               <Entypo name="dot-single" size={12} />
               <Entypo name="globe" size={10} />
             </View>
@@ -76,7 +121,7 @@ const ArticleList = ({ route }) => {
             </View>
             <Text>{item.like_count}</Text>
           </View>
-          {!item.author.isMe && (
+          {!item.author.is_me && (
             <>
               <View style={{ height: 1, backgroundColor: "#F9F9F9" }} />
               <View
@@ -86,8 +131,13 @@ const ArticleList = ({ route }) => {
                   backgroundColor2: "green",
                 }}>
                 <TouchableOpacity
-                  style={{ flexDirection: "row", alignItems: "center" }}>
-                  <AntDesign name="like2" size={20} />
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                  onPress={() => handleLikePressed(item)}>
+                  {item.is_liked ? (
+                    <AntDesign name="like1" size={20} color="blue" />
+                  ) : (
+                    <AntDesign name="like2" size={20} />
+                  )}
                   <Text style={{ marginLeft: SIZES.base }}>Like</Text>
                 </TouchableOpacity>
               </View>
@@ -107,13 +157,17 @@ const ArticleList = ({ route }) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor2: "green" }}>
-      <FlatList
-        data={posts}
-        keyExtractor={item => `${item.id}`}
-        renderItem={renderItem}
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor2: "green" }}>
+      {isLoading ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          data={posts}
+          keyExtractor={item => `${item.id}`}
+          renderItem={renderItem}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 
