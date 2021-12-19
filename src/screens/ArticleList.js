@@ -10,21 +10,10 @@ import {
 import Entypo from "react-native-vector-icons/Entypo";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { FONTS, SIZES, COLORS } from "../constants";
-import {
-  loadArticles,
-  loadArticlesForCurrentUser,
-  likeArticle,
-  unlikeArticle,
-} from "../services/article-service";
+import articleService from "../services/article-service";
+import LoadingView from "../components/LoadingView";
 import moment from "moment";
 
-const LoadingView = () => {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Loading...</Text>
-    </View>
-  );
-};
 const ArticleList = ({ route }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -38,9 +27,9 @@ const ArticleList = ({ route }) => {
     if (user) {
       let articles;
       if (user.is_me) {
-        articles = await loadArticlesForCurrentUser();
+        articles = await articleService.loadArticlesForCurrentUser();
       } else {
-        articles = await loadArticles(user.id);
+        articles = await articleService.loadArticles(user.id);
       }
       setPosts(articles);
     }
@@ -50,9 +39,9 @@ const ArticleList = ({ route }) => {
 
   async function handleLikePressed(article) {
     if (article.is_liked) {
-      await unlikeArticle(article.id);
+      await articleService.unlikeArticle(article.id);
     } else {
-      await likeArticle(article.id);
+      await articleService.likeArticle(article.id);
     }
 
     await loadData();
@@ -109,7 +98,7 @@ const ArticleList = ({ route }) => {
             }}>
             <View
               style={{
-                backgroundColor: "#1878f3",
+                backgroundColor: COLORS.blue,
                 width: 20,
                 height: 20,
                 borderRadius: 10,
@@ -123,18 +112,17 @@ const ArticleList = ({ route }) => {
           </View>
           {!item.author.is_me && (
             <>
-              <View style={{ height: 1, backgroundColor: "#F9F9F9" }} />
+              <View style={{ height: 1, backgroundColor: COLORS.lightGray }} />
               <View
                 style={{
                   flexDirection: "row",
                   paddingVertical: 9,
-                  backgroundColor2: "green",
                 }}>
                 <TouchableOpacity
                   style={{ flexDirection: "row", alignItems: "center" }}
                   onPress={() => handleLikePressed(item)}>
                   {item.is_liked ? (
-                    <AntDesign name="like1" size={20} color="blue" />
+                    <AntDesign name="like1" size={20} color={COLORS.blue} />
                   ) : (
                     <AntDesign name="like2" size={20} />
                   )}
@@ -148,8 +136,8 @@ const ArticleList = ({ route }) => {
         <View
           style={{
             height: 9,
-            // backgroundColor: "green",
-            backgroundColor: "#F0F2F5",
+
+            backgroundColor: COLORS.gray1,
           }}
         />
       </View>
@@ -157,7 +145,7 @@ const ArticleList = ({ route }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor2: "green" }}>
+    <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
         <LoadingView />
       ) : (

@@ -32,11 +32,8 @@ const Home = ({ navigation }) => {
       <TouchableOpacity
         style={{
           flex: 1,
-
-          backgroundColor2: "yellow",
           paddingVertical: 8,
           paddingHorizontal: 9,
-          // alignItems: "center",
           justifyContent: "center",
         }}
         onPress={() => {
@@ -53,12 +50,10 @@ const Home = ({ navigation }) => {
           }}>
           <View
             style={{
-              // flex: 1,
               width: 80,
               height: 80,
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor2: "yellow",
             }}>
             <Image
               source={{ uri: item.avatar }}
@@ -71,12 +66,9 @@ const Home = ({ navigation }) => {
               flex: 1.5,
               marginLeft: SIZES.base,
               justifyContent: "center",
-              backgroundColor2: "red",
             }}>
-            <Text style={{ color: COLORS.gray, ...FONTS.h3 }}>{item.name}</Text>
-            <Text style={{ color: COLORS.gray, ...FONTS.body3 }}>
-              {item.title}
-            </Text>
+            <Text style={{ ...FONTS.h3 }}>{item.name}</Text>
+            <Text style={{ ...FONTS.body3 }}>{item.title}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -84,7 +76,7 @@ const Home = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor2: "green" }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <FlatList
         data={users}
         keyExtractor={item => `${item.id}`}

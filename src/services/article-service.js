@@ -22,3 +22,10 @@ export const likeArticle = async articleId => {
 export const unlikeArticle = async articleId => {
   await mockClient.unlikeArticle(articleId);
 };
+
+export default {
+  loadArticles,
+  likeArticle,
+  unlikeArticle,
+  loadArticlesForCurrentUser,
+};
