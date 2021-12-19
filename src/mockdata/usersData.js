@@ -43,8 +43,8 @@ const usersData = [
   },
   {
     id: 7,
-    name: "Mandy Cheung",
-    title: "Joanne Lam",
+    name: "Joanne Au",
+    title: "Product Owner",
     avatar: "https://i.pravatar.cc/150?u=7",
     is_me: false,
   },
