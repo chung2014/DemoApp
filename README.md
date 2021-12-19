@@ -4,7 +4,7 @@ This project aims to provide a demo for react-native application.
 
 ## Features
 - [x] List of users 
-- [x] List of Articles
+- [x] List of articles
 
 ## Prerequisites
 
@@ -17,6 +17,24 @@ This project aims to provide a demo for react-native application.
 
 For more info please go to https://reactnative.dev/docs/environment-setup
 
+## Usage
+Install the modules for the app
+```
+npm install
+# or use yarn
+# yarn
+
+```
+
+Install dependancies for iOS
+```
+npx pod-install ios
+```
+
+Run the app in iOS
+```
+npx react-native run-ios
+```
 ## Base dependencies
 
 - [react-navigation](https://reactnavigation.org/) navigation library.
@@ -33,9 +51,9 @@ The app use FlatList to render users and articles, which is a UI component for o
 
 The mock data is loaded into async storage when the app first launch. Once the mock data is loaded into async storage, later the app will continue to interact with data persisted in async storage instead of the initial load. In order to reset the data, please remove the app and install it again.
 
-For editing the mock user data, please edit on `mockdata/usersData.js`.
+For editing the mock user data, please edit on `src/mockdata/usersData.js`.
 
-For editing the mock article data, please edit on `mockdata/postsData.js`.
+For editing the mock article data, please edit on `src/mockdata/postsData.js`.
 
 ```javascript
 // user object
